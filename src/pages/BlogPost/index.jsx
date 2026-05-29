@@ -1,24 +1,25 @@
-import { posts } from "../Feed/data";
 import styles from "./blogpost.module.css";
+
+import { posts } from "../Feed/data";
+
 import { ThumbsUpButton } from "../../components/CardPost/ThumbsUpButton";
-import { IconButton } from "../../components/IconButton";
-import { IconChat } from "../../components/icons/IconChat";
 import { Author } from "../../components/Author";
 import Typography from "../../components/Typography";
 import { CommentList } from "../../components/CommentList";
 import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router";
 import { useEffect } from "react";
+import { ModalComment } from "../../components/ModalComment";
 
 export const BlogPost = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+
   const post = posts.find((p) => p.slug == slug);
 
   useEffect(() => {
     if (!post) {
-      navigate("/NotFound");
-      return null;
+      navigate("/not-found");
     }
   }, [navigate, post]);
 
@@ -48,9 +49,7 @@ export const BlogPost = () => {
               <p>{post.likes}</p>
             </div>
             <div className={styles.action}>
-              <IconButton>
-                <IconChat />
-              </IconButton>
+              <ModalComment />
               <p>{post.comments.length}</p>
             </div>
           </div>

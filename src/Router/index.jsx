@@ -3,7 +3,6 @@ import { Login } from "../pages/Login";
 import { Logout } from "../pages/logout";
 import { Register } from "../pages/Register";
 import { BlogPost } from "../pages/BlogPost";
-import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Feed } from "../pages/Feed";
 import { AuthLayout } from "../layouts/Auth";
 import { AppLayout } from "../layouts/App";
@@ -20,30 +19,8 @@ export const AppRouter = () => {
         </Route>
 
         <Route path="/" element={<AppLayout />}>
-          <Route
-            path=":slug"
-            element={
-              <ProtectedRoute>
-                <BlogPost />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="blogPost"
-            element={
-              <ProtectedRoute>
-                <BlogPost />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path=""
-            element={
-              <ProtectedRoute>
-                <Feed />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="blog-post/:slug" element={<BlogPost />} />
+          <Route path="" element={<Feed />} />
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
