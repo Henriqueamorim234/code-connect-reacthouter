@@ -6,6 +6,7 @@ import { Register } from "./pages/Register/index.jsx";
 import { Feed } from "./pages/Feed/index.jsx";
 import { BlogPost } from "./pages/BlogPost/index.jsx";
 import { BrowserRouter, Routes, Route } from "react-router";
+import { ProtectedRoute } from "./components/ProtectedRoute/index.jsx";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -17,8 +18,22 @@ createRoot(document.getElementById("root")).render(
         </Route>
 
         <Route path="/">
-          <Route path="blog-post" element={<BlogPost />} />
-          <Route path="" element={<Feed />} />
+          <Route
+            path="blog-post"
+            element={
+              <ProtectedRoute>
+                <BlogPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path=""
+            element={
+              <ProtectedRoute>
+                <Feed />
+              </ProtectedRoute>
+            }
+          />
         </Route>
       </Routes>
     </BrowserRouter>
