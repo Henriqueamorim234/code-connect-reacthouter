@@ -36,54 +36,52 @@ export const Register = () => {
   };
 
   return (
-    <AuthLayout>
-      <AuthFormContainer bannerSrc={banner}>
-        <Typography variant="h1" color="--offwhite">
-          Cadastro
+    <AuthFormContainer bannerSrc={banner}>
+      <Typography variant="h1" color="--offwhite">
+        Cadastro
+      </Typography>
+      <Typography variant="h2" color="--offwhite">
+        Olá! Preencha seus dados.
+      </Typography>
+      <Form action={onSubmit}>
+        <Fieldset>
+          <Label>Nome</Label>
+          <Input name="name" id="name" placeholder="Nome completo" required />
+        </Fieldset>
+        <Fieldset>
+          <Label>E-mail</Label>
+          <Input
+            name="email"
+            id="email"
+            type="email"
+            placeholder="Digite seu e-mail"
+            required
+          />
+        </Fieldset>
+        <Fieldset>
+          <Label>Senha</Label>
+          <Input name="password" id="password" type="password" required />
+          <Checkbox label="Lembrar-me" />
+        </Fieldset>
+        <Button type="submit">
+          Cadastrar-se <IconArrowFoward />
+        </Button>
+      </Form>
+      <div>
+        <TextDivider text="ou entre com outras contas" />
+        <Providers />
+      </div>
+      <footer className={styles.footer}>
+        <Typography variant="body" color="--offwhite">
+          Já tem conta?
         </Typography>
-        <Typography variant="h2" color="--offwhite">
-          Olá! Preencha seus dados.
-        </Typography>
-        <Form action={onSubmit}>
-          <Fieldset>
-            <Label>Nome</Label>
-            <Input name="name" id="name" placeholder="Nome completo" required />
-          </Fieldset>
-          <Fieldset>
-            <Label>E-mail</Label>
-            <Input
-              name="email"
-              id="email"
-              type="email"
-              placeholder="Digite seu e-mail"
-              required
-            />
-          </Fieldset>
-          <Fieldset>
-            <Label>Senha</Label>
-            <Input name="password" id="password" type="password" required />
-            <Checkbox label="Lembrar-me" />
-          </Fieldset>
-          <Button type="submit">
-            Cadastrar-se <IconArrowFoward />
-          </Button>
-        </Form>
-        <div>
-          <TextDivider text="ou entre com outras contas" />
-          <Providers />
-        </div>
-        <footer className={styles.footer}>
-          <Typography variant="body" color="--offwhite">
-            Já tem conta?
+        <Link href="/auth/login">
+          <Typography variant="body" color="--highlight-green">
+            Faça seu login!
           </Typography>
-          <Link href="/auth/login">
-            <Typography variant="body" color="--highlight-green">
-              Faça seu login!
-            </Typography>
-            <IconLogin color="#81FE88" />
-          </Link>
-        </footer>
-      </AuthFormContainer>
-    </AuthLayout>
+          <IconLogin color="#81FE88" />
+        </Link>
+      </footer>
+    </AuthFormContainer>
   );
 };

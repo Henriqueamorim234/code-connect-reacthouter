@@ -5,20 +5,31 @@ import { Register } from "../pages/Register";
 import { BlogPost } from "../pages/BlogPost";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import { Feed } from "../pages/Feed";
+import { AuthLayout } from "../layouts/Auth";
+import { AppLayout } from "../layouts/App";
+import { NotFound } from "../pages/NotFound";
 
 export const AppRouter = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/auth">
+        <Route path="/auth" element={<AuthLayout />}>
           <Route path="register" element={<Register />} />
           <Route path="login" element={<Login />} />
           <Route path="logout" element={<Logout />} />
         </Route>
 
-        <Route path="/">
+        <Route path="/" element={<AppLayout />}>
           <Route
             path=":slug"
+            element={
+              <ProtectedRoute>
+                <BlogPost />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="blogPost"
             element={
               <ProtectedRoute>
                 <BlogPost />
@@ -34,6 +45,7 @@ export const AppRouter = () => {
             }
           />
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
