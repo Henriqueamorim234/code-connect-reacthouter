@@ -4,8 +4,27 @@ import { Author } from "../Author";
 import { ThumbsUpButton } from "./ThumbsUpButton";
 import { ModalComment } from "../ModalComment";
 import { Link } from "react-router";
+import { useState } from "react";
+import { http } from "../../api";
+import { useAuth } from "../../hooks/useAuth";
 
 export const CardPost = ({ post }) => {
+  const [Likes, setLikes] = useState(post.likes);
+  const [comments, setComments] = useState(post.comments);
+
+  const { isAuthenticated } = useAuth();
+
+  const HandleNewCommit = (comment) => {
+    setComments([comment, ...comments]);
+  };
+
+  const HandleLike = () => {
+    http.post(`/blog-posts/${post.id}/like`, {}).then(() => {
+      setLikes((oldState) => oldState + 1);
+      console.log("implementar like");
+    });
+  };
+
   return (
     <article className={styles.card}>
       <header className={styles.header}>
@@ -21,12 +40,16 @@ export const CardPost = ({ post }) => {
       <footer className={styles.footer}>
         <div className={styles.actions}>
           <div className={styles.action}>
-            <ThumbsUpButton loading={false} />
-            <p>{post.likes}</p>
+            <ThumbsUpButton
+              loading={false}
+              onClick={HandleLike}
+              disabled={!isAuthenticated}
+            />
+            <p>{Likes}</p>
           </div>
           <div className={styles.action}>
-            <ModalComment />
-            <p>{post.comments.length}</p>
+            <ModalComment onSuccess={HandleNewCommit} postId={post.id} />
+            <p>{comments.length}</p>
           </div>
         </div>
         <Author author={post.author} />

@@ -3,44 +3,51 @@ import { Checkbox } from "../../components/Checkbox";
 import { Input } from "../../components/Input";
 import { Label } from "../../components/Label";
 import Typography from "../../components/Typography";
+import { AuthLayout } from "../../layouts/Auth";
 import { Button } from "../../components/Button";
-import banner from "./banner-login.png";
+import banner from "./banner-register.png";
 import { IconArrowFoward } from "../../components/icons/IconArrowFoward";
-import { IconAssignement } from "../../components/icons/IconAssignement";
+import { IconLogin } from "../../components/icons/IconLogin";
 import { Form } from "../../components/Form";
 import { Fieldset } from "../../components/Fieldset";
 import { TextDivider } from "../../components/TextDivider";
 import { Providers } from "../../components/Providers";
 import { Link } from "../../components/Link";
-import styles from "./login.module.css";
+import styles from "./register.module.css";
 import { useAuth } from "../../hooks/useAuth";
 import { useNavigate } from "react-router";
 
-export const Login = () => {
-  const { login } = useAuth();
+export const Register = () => {
+  const { register } = useAuth();
   const navigate = useNavigate();
 
-  const onSubmit = (formdata) => {
-    const email = formdata.get("email");
-    const password = formdata.get("password");
+  const onSubmit = async (formData) => {
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const password = formData.get("password");
 
-    const response = login(email, password);
+    const response = await register(name, email, password);
 
     if (response.success) {
-      navigate("/");
+      navigate("/auth/login");
     } else {
       console.log(response.error);
     }
   };
+
   return (
     <AuthFormContainer bannerSrc={banner}>
       <Typography variant="h1" color="--offwhite">
-        Login
+        Cadastro
       </Typography>
       <Typography variant="h2" color="--offwhite">
-        Boas-vindas! Faça seu login.
+        Olá! Preencha seus dados.
       </Typography>
       <Form action={onSubmit}>
+        <Fieldset>
+          <Label>Nome</Label>
+          <Input name="name" id="name" placeholder="Nome completo" required />
+        </Fieldset>
         <Fieldset>
           <Label>E-mail</Label>
           <Input
@@ -57,7 +64,7 @@ export const Login = () => {
           <Checkbox label="Lembrar-me" />
         </Fieldset>
         <Button type="submit">
-          Login <IconArrowFoward />
+          Cadastrar-se <IconArrowFoward />
         </Button>
       </Form>
       <div>
@@ -66,13 +73,13 @@ export const Login = () => {
       </div>
       <footer className={styles.footer}>
         <Typography variant="body" color="--offwhite">
-          Ainda não tem conta?
+          Já tem conta?
         </Typography>
-        <Link href="/auth/register">
+        <Link href="/auth/login">
           <Typography variant="body" color="--highlight-green">
-            Crie seu cadastro!
+            Faça seu login!
           </Typography>
-          <IconAssignement color="#81FE88" />
+          <IconLogin color="#81FE88" />
         </Link>
       </footer>
     </AuthFormContainer>

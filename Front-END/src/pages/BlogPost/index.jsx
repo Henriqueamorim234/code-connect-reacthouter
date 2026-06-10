@@ -1,27 +1,47 @@
 import styles from "./blogpost.module.css";
-
-import { posts } from "../Feed/data";
-
 import { ThumbsUpButton } from "../../components/CardPost/ThumbsUpButton";
 import { Author } from "../../components/Author";
 import Typography from "../../components/Typography";
 import { CommentList } from "../../components/CommentList";
 import ReactMarkdown from "react-markdown";
 import { useNavigate, useParams } from "react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ModalComment } from "../../components/ModalComment";
+import { http } from "../../api";
 
 export const BlogPost = () => {
   const { slug } = useParams();
+  const [post, setPost] = useState(null);
   const navigate = useNavigate();
+  const [comments, setComments] = useState([]);
 
-  const post = posts.find((p) => p.slug == slug);
+  const HandleNewCommit = (comment) => {
+    setComments(comment, ...comments);
+  };
+
+  const HandleDelete = (commitId) => {
+    const isConfirm = confirm("Tem certeza que deseja remover o comentario?");
+
+    if (isConfirm) {
+      http.delete(`/comments/${commitId}`).then(() => {
+        setComments((oldState) => oldState.filter((c) => c.id != commitId));
+      });
+    }
+  };
 
   useEffect(() => {
-    if (!post) {
-      navigate("/not-found");
-    }
-  }, [navigate, post]);
+    http
+      .get(`/blog-posts/slug/${slug}`)
+      .then((response) => {
+        setPost(response.data);
+        setComments(response.data.comments);
+      })
+      .catch((error) => {
+        if (error.status == 404) {
+          navigate("/not-found");
+        }
+      });
+  }, [slug, navigate]);
 
   if (!post) {
     return null;
@@ -49,8 +69,8 @@ export const BlogPost = () => {
               <p>{post.likes}</p>
             </div>
             <div className={styles.action}>
-              <ModalComment />
-              <p>{post.comments.length}</p>
+              <ModalComment onSuccess={HandleNewCommit} postId={post?.id} />
+              <p>{comments.length}</p>
             </div>
           </div>
           <Author author={post.author} />
@@ -60,7 +80,7 @@ export const BlogPost = () => {
       <div className={styles.code}>
         <ReactMarkdown>{post.markdown}</ReactMarkdown>
       </div>
-      <CommentList comments={post.comments} />
+      <CommentList comments={comments} onDelete={HandleDelete} />
     </main>
   );
 };
